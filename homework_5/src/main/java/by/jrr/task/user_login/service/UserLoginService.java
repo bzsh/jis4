@@ -51,7 +51,7 @@ public class UserLoginService {
         return user;
     }
 
-    public boolean IsLoginAttemptsLeft(User user) {
+    public boolean isLoginAttemptsLeft(User user) {
         return user.getCountOfLoginAttempts() > 0;
     }
 }
