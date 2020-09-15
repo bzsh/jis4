@@ -4,23 +4,23 @@
     <artifactId>free</artifactId>
     <version>1.0-SNAPSHOT</version>
     <dependencies>
-        <!--   https://mvnrepository.com/artifact/junit/junit   -->
+        <!--  https://mvnrepository.com/artifact/junit/junit  -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-        <!--   log4j-api 2.12.1   -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>2.12.1</version>
-        </dependency>
-        <!--   log4j-core 2.12.1   -->
+        <!--  https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core  -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
+            <version>2.12.1</version>
+        </dependency>
+        <!--  https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api  -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
             <version>2.12.1</version>
         </dependency>
     </dependencies>
@@ -30,8 +30,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -61,7 +61,7 @@
                                 <rule>
                                     <limits>
                                         <limit>
-                                            <minimum>0.4</minimum>
+                                            <minimum>0.7</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -72,10 +72,12 @@
             </plugin>
         </plugins>
     </build>
+
     <properties>
         <sonar.projectKey>bzsh_jis4</sonar.projectKey>
         <sonar.organization>bzsh</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.login>e54f1494e668dda37c167c12332225b6cac64293</sonar.login>
+        <sonar.login>2aea8836a8b4a8a7b671f1da7ab7ec669194571a</sonar.login>
     </properties>
+
 </project>
