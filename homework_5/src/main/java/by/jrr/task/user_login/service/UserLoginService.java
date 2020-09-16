@@ -17,7 +17,7 @@ public class UserLoginService {
             return false;
         } else {
             decrementCountOfLoginAttempts(user);
-            if(!IsLoginAttemptsLeft(user)) {
+            if(!isLoginAttemptsLeft(user)) {
                 blockUser(user);
             }
             return false;

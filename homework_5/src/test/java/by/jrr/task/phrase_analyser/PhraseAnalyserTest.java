@@ -14,8 +14,16 @@ public class PhraseAnalyserTest {
     }
 
     @Test
-    public void analyzeShouldReturnStringWithWorth() {
+    public void analyzeShouldReturnStringWithWorthCaseOne() {
         String phrase = "Make app great again f";
+        String expected = "It could be worse";
+        String actual = PhraseAnalyser.analyze(phrase);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void analyzeShouldReturnStringWithWorthCaseTwo() {
+        String phrase = "f Make app great again";
         String expected = "It could be worse";
         String actual = PhraseAnalyser.analyze(phrase);
         assertEquals(expected, actual);

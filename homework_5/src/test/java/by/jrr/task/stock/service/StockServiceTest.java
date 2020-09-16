@@ -20,11 +20,23 @@ public class StockServiceTest {
     }
 
     @Test
-    public void testUpdatingCurrentCostAndMinCost() {
+    public void testUpdatingCurrentCostWhenCostsAreEqual() {
         int newCost = 10;
         Stock stock = new Stock("Yahoo", 10);
         StockService service = new StockService();
         int expected  = 10;
+        int actual;
+        service.updateCurrentCost(stock, newCost);
+        actual = stock.getMinCost();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testUpdatingCurrentCostAndMinCost() {
+        int newCost = 9;
+        Stock stock = new Stock("Yahoo", 10);
+        StockService service = new StockService();
+        int expected  = 9;
         int actual;
         service.updateCurrentCost(stock, newCost);
         actual = stock.getMinCost();
