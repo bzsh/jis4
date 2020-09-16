@@ -127,7 +127,7 @@ public class UserLoginServiceTest {
         User user = new User("User", "1234");
         user.setCountOfLoginAttempts(1);
         UserLoginService userLoginService = new UserLoginService();
-        boolean actual = userLoginService.IsLoginAttemptsLeft(user);
+        boolean actual = userLoginService.isLoginAttemptsLeft(user);
         assertTrue(actual);
     }
 

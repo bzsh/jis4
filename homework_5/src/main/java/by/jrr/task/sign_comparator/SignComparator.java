@@ -1,6 +1,5 @@
 package by.jrr.task.sign_comparator;
 
-import by.jrr.task.phrase_analyser.PhraseAnalyser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
