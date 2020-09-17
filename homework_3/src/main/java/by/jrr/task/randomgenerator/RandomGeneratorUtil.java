@@ -5,14 +5,15 @@ import java.util.Random;
 public class RandomGeneratorUtil {
     private static final Random rnd = new Random();
 
-    private RandomGeneratorUtil(){}
+    private RandomGeneratorUtil() {
+    }
 
     public static int generateRandomNumber() {
 
         return rnd.nextInt(101);
     }
 
-    public static void printToConsole(int num) {
-        System.out.print(num);
+    public static String printToConsole(int num) {
+        return Integer.toString(num);
     }
 }
