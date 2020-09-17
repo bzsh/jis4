@@ -6,13 +6,13 @@ public class Tv {
     private int currentChannel;
     private int currentVolume;
     private String manufacture;
-    private boolean isTunedOn;
+    private boolean isTurnedOn;
 
-    public Tv(int currentChannel, int currentVolume, String manufacture, boolean isTunedOn) {
+    public Tv(int currentChannel, int currentVolume, String manufacture, boolean isTurnedOn) {
         this.currentChannel = currentChannel;
         this.currentVolume = currentVolume;
         this.manufacture = manufacture;
-        this.isTunedOn = isTunedOn;
+        this.isTurnedOn = isTurnedOn;
     }
 
     public int getCurrentChannel() {
@@ -39,12 +39,12 @@ public class Tv {
         this.manufacture = manufacture;
     }
 
-    public boolean isTunedOn() {
-        return isTunedOn;
+    public boolean isTurnedOn() {
+        return isTurnedOn;
     }
 
-    public void setTunedOn(boolean tunedOn) {
-        isTunedOn = tunedOn;
+    public void setTurnedOn(boolean turnedOn) {
+        isTurnedOn = turnedOn;
     }
 
     @Override
@@ -55,13 +55,13 @@ public class Tv {
         Tv tv = (Tv) o;
         return currentChannel == tv.currentChannel &&
                 currentVolume == tv.currentVolume &&
-                isTunedOn == tv.isTunedOn &&
+                isTurnedOn == tv.isTurnedOn &&
                 Objects.equals(manufacture, tv.manufacture);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(currentChannel, currentVolume, manufacture, isTunedOn);
+        return Objects.hash(currentChannel, currentVolume, manufacture, isTurnedOn);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class Tv {
                 "currentChannel=" + currentChannel +
                 ", getCurrentVolume=" + currentVolume +
                 ", manufacture='" + manufacture + '\'' +
-                ", isTunedOn=" + isTunedOn +
+                ", isTunedOn=" + isTurnedOn +
                 '}';
     }
 }
