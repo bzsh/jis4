@@ -1,8 +1,12 @@
 package by.jrr.task.randomgenerator;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Random;
 
 public class RandomGeneratorUtil {
+    public static final Logger LOGGER = LogManager.getLogger(RandomGeneratorUtil.class);
     private static final Random rnd = new Random();
 
     private RandomGeneratorUtil(){}
@@ -13,6 +17,6 @@ public class RandomGeneratorUtil {
     }
 
     public static void printToConsole(int num) {
-        System.out.print(num);
+        LOGGER.info(num);
     }
 }
