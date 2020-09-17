@@ -29,8 +29,9 @@ public class CounterTest {
     @Test
     public void incrementMaxLimit() {
         Counter counter = new Counter();
+        counter.setValue(100);
         counter.increment();
-        int expected = 1;
+        int expected = 100;
         int actual = counter.getValue();
         assertEquals(expected, actual);
     }
