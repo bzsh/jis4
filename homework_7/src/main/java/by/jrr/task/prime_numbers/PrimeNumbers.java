@@ -26,15 +26,16 @@ public class PrimeNumbers {
                 result[1]++;
             }
             if (result[1] == 50) {            // прекращаем, если колва простых чисел = 50
-                break;
+                return result;
             }
             dividers = 0;                     // сброс счетчика
         }
         return result;
     }
 
-        public static String printResult( int[] result){
-        LOGGER.info("The sum of prime numbers is " + result[0] + "\n" + "The quantity of prime numbers is " + result[1]);
-            return "The sum of prime numbers is " + result[0] + "\n" + "The quantity of prime numbers is " + result[1];
-        }
+    public static String printResult(int[] result) {
+        LOGGER.info(result[0]);
+        LOGGER.info(result[1]);
+        return "The sum of prime numbers is " + result[0] + "\n" + "The quantity of prime numbers is " + result[1];
     }
+}
