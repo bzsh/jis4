@@ -14,9 +14,9 @@ public class NumberServiceTest {
     }
 
     @Test
-    public void rangeEvenCount() {
-        int expected = 11;
-        int actual = NumberService.rangeEvenCount(0, 20);
+    public void rangeRotateArgs() {
+        int expected = 25;
+        int actual = NumberService.range(7, 3);
         assertEquals(expected, actual);
     }
 
@@ -24,6 +24,13 @@ public class NumberServiceTest {
     public void rangeTwo() {
         int expected = 3;
         int actual = NumberService.range(0, 2);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void rangeEvenCount() {
+        int expected = 11;
+        int actual = NumberService.rangeEvenCount(0, 20);
         assertEquals(expected, actual);
     }
 
