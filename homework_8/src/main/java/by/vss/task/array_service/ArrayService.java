@@ -41,4 +41,26 @@ public class ArrayService {
         }
         return result;
     }
+
+    public void sort(int[] array) {
+        int t = 0;
+        for (int i = 0; i < array.length; i++) {
+            for (int j = i + 1; j < array.length; j++) {
+                if (array[i] > array[j]) {
+                    t = array[i];
+                    array[i] = array[j];
+                    array[j] = t;
+                }
+            }
+        }
+    }
+
+    public void swap(int[] array) {
+        int t = 0;
+        for (int i = 0, j = array.length - 1; i < array.length/2; i++, j--) {
+            t = array[j];
+            array[j] = array[i];
+            array[i] = t;
+        }
+    }
 }

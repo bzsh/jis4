@@ -1,6 +1,7 @@
 package by.vss.task.array_service;
 
 import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,10 +10,12 @@ import java.util.Arrays;
 public class ArrayServiceTest {
 
     ArrayService arrayService;
+
     @Before
-    public void setup(){
+    public void setup() {
         arrayService = new ArrayService();
     }
+
     @Test
     public void create() {
         int[] expected = new int[5];
@@ -32,7 +35,7 @@ public class ArrayServiceTest {
 
     @Test
     public void printArray() {
-        int[] array = new int[]{1,2,3,4,5};
+        int[] array = new int[]{1, 2, 3, 4, 5};
         String expected = "1,2,3,4,5,";
         String actual = arrayService.printArray(array);
         assertEquals(expected, actual);
@@ -40,7 +43,7 @@ public class ArrayServiceTest {
 
     @Test
     public void sum() {
-        int[] array = new int[]{1,2,3,4,5};
+        int[] array = new int[]{1, 2, 3, 4, 5};
         int expected = 15;
         int actual = arrayService.sum(array);
         assertEquals(expected, actual);
@@ -48,9 +51,27 @@ public class ArrayServiceTest {
 
     @Test
     public void avg() {
-        int[] array = new int[]{1,2,3,4,5};
+        int[] array = new int[]{1, 2, 3, 4, 5};
         double expected = 3;
         double actual = arrayService.avg(array);
         assertEquals(expected, actual, 0);
+    }
+
+    @Test
+    public void sort() {
+        int[] array = new int[]{4, 3, 1, 2, 5};
+        int expected = Arrays.hashCode(array);
+        arrayService.sort(array);
+        int actual = Arrays.hashCode(array);
+        assertNotEquals(expected, actual);
+    }
+
+    @Test
+    public void swap() {
+        int[] array = new int[]{1, 2, 3, 4, 5};
+        int expected = Arrays.hashCode(array);
+        arrayService.swap(array);
+        int actual = Arrays.hashCode(array);
+        assertNotEquals(expected, actual);
     }
 }
