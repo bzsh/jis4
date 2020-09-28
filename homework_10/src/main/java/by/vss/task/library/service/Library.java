@@ -1,11 +1,14 @@
 package by.vss.task.library.service;
 
 import by.vss.task.library.bean.Book;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Library {
+    public final Logger logger = LogManager.getLogger(Library.class);
     private final List<Book> books;
 
     public Library() {
@@ -14,10 +17,12 @@ public class Library {
 
     public void add(Book book) {
         books.add(book);
+        logger.info("Book has been successfully added to the Library");
     }
 
     public void remove(Book book) {
         books.remove(book);
+        logger.info("Book has been successfully removed to the Library");
     }
 
     public List<Book> findBooksByAuthor(String author) {
