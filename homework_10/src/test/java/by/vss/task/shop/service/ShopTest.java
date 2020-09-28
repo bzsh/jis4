@@ -34,7 +34,7 @@ public class ShopTest {
 
     @Test
     public void remove() {
-        shop.remove(new Product("Potato", new BigDecimal(133)));
+        shop.remove(new Product("Potato", new BigDecimal(113)));
         int expected = 2;
         int actual = shop.getProductList().size();
         assertEquals(expected, actual);
@@ -43,7 +43,7 @@ public class ShopTest {
 
     @Test
     public void findProductByName() {
-        Product expected = new Product("Potato", new BigDecimal(123));
+        Product expected = new Product("Potato", new BigDecimal(113));
         Product actual = shop.findProductByName("potato");
         assertEquals(expected, actual);
     }
@@ -64,6 +64,7 @@ public class ShopTest {
         List<Product> actual = shop.findProductsByCostRange(minRange, maxRange);
         assertEquals(expected, actual);
     }
+
     @Test
     public void findProductsByCostRangeShouldNotFound() {
         BigDecimal minRange = new BigDecimal(0);
