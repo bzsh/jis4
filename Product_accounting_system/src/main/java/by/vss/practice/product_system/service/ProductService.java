@@ -1,133 +1,77 @@
 package by.vss.practice.product_system.service;
-/*Final Project
-Система учета продуктов
-1. Description
-В приложении должны быть функции добавление/удаление/получение продукта (CRUD operations).
 
+import by.vss.practice.product_system.bean.Product;
+import by.vss.practice.product_system.category.Category;
+import by.vss.practice.product_system.db.InMemoryDatabase;
+import by.vss.practice.product_system.exception.ProductDatabaseException;
+import by.vss.practice.product_system.utill.IdCreator;
 
+import java.math.BigDecimal;
+import java.util.Iterator;
+import java.util.List;
 
-Минимальные требования (возможные пункты меню):
-
-
-
-1. Добавление продукта
-
-2. Получение продукта по id
-
-3. Получение списка всех продуктов
-
-4. Удаление продукта по id
-
-
-
-Как минимум должен быть 1 интерфейс или абстрактный класс. Использование должно быть подкреплено необходимостью.
-
-
-
-Как минимум 1 коллекция (любая из List, Map, Set)
-
-
-
-Названия должны соответствовать логике приложения. (Clean Code в помощь)
-
-Не должно быть комментариев - код должен быть понятен без комментариев.
-
-
-
-Основная сущность - Product.
-
-
-
-Основные поля (mandatory fields):
-
-Название (name) - тип данных String (example: Apple)
-
-Идентификационный номер (id) - тип данных Long (example: 123)
-
-Цена (price) - тип данных BigDecimal (example: 0.14)
-
-Категоря (category) - enum (example: FRUIT)
-
-
-
-Опциональные поля (optional fields):
-
-Скидка (discount) - тип данных BigDecimal (example: 0.05) (т.е 5%)
-
-Описание (description) - тип данных String (example: Tasty apples from Latvia)
-
-
-
-В случае если основное поле не было введено - не записывать продукт, а сообщить пользователю о том, что поле не введено или введено некорректно.
-
-
-
-При добавлении продукта пользователь не указывает id. Id присваивается в коде.
-
-Например: при первом добавлении продукта id будет 0, при добавлении следующего продукта у нового будет уже 1 и т.д.
-
-
-
-В случае если на продукт есть скидка то при отображении информации на консоле должно быть понятно, что есть скидка. Например:
-
-
-
-Product information:
-
-Id: 123
-
-Name: Apple
-
-Regular price: 0.14
-
-Discount: 50%
-
-Actual price: 0.07
-
-
-
-В качестве InMemoryDatabase можно использовать любую коллекцию.
-
-
-
-Усложнения:
-
-Необходимо иметь возможность легко внедрять новые фичи (features) и легко убирать.
-
-
-
-Необходимо разделить функционал таким образом, чтобы UI Console / бизнес логика (service) и база (Database) были разделены по уровням (используйте разделение по packages).
-
-На уровне UI-console только общение с пользователем (т.е меню)
-
-На уровне service вся бизнес логика приложения (так же валидация)
-
-На уровне database только база данных (коллекция)
-
-
-
-Функциональные усложнения:
-
-1. Добавить возможность получить список определенной категории
-
-2. Добавить возможность менять информацию о продукте. Например поменять цену или добавить/убрать скидку
-
-3. Добавить возможность поставить скидку на все товары определенной категории
-
-4. Программа должны быть протестирована при помощи jUnit. (Можно и при помощи самописных тестов)
-
-*Меню не тестировать
-
-5. Покрытие тестами (code coverage) > 70%
-
-
-
-Супер уровень:
-
-1. Познакомиться с build tool maven и внедрить в проект
-
-Убедиться что работают команды clean, install
-
-2. Залить проект на github*/
 public class ProductService {
+    InMemoryDatabase database = InMemoryDatabase.getInstance();
+
+    public ProductService() {
+    }
+
+    private Product createProduct(String name, String price, String category, String discount, String description) {
+        BigDecimal bigDecimalPrice;
+        BigDecimal bigDecimalDiscount;
+        Product product;
+        Category categoryEnum;
+        if (discount != null && description != null) {
+            bigDecimalPrice = new BigDecimal(price);
+            bigDecimalDiscount = new BigDecimal(discount);
+            categoryEnum = Category.valueOf(category);
+            product = new Product(IdCreator.createId(), name, bigDecimalPrice, categoryEnum, bigDecimalDiscount, description);
+        } else {
+            bigDecimalPrice = new BigDecimal(price);
+            bigDecimalDiscount = BigDecimal.valueOf(0.0D);
+            categoryEnum = Category.valueOf(category);
+            String defaultDescription = "no description";
+            product = new Product(IdCreator.createId(), name, bigDecimalPrice, categoryEnum, bigDecimalDiscount, defaultDescription);
+        }
+
+        return product;
+    }
+
+    public void addProductToDatabase(String[] arr) {
+        Product product = this.createProduct(arr[0], arr[1], arr[2], arr[3], arr[4]);
+        this.database.add(product);
+    }
+
+    public void deleteProductFromDatabase(String productId) throws ProductDatabaseException {
+        this.database.remove(Long.parseLong(productId));
+    }
+
+    public String[] getAllProductsFromDatabase() throws ProductDatabaseException {
+        List<Product> products = this.database.getAll();
+        String[] result = new String[products.size()];
+
+        for (int i = 0; i < products.size(); ++i) {
+            result[i] = ((Product) products.get(i)).toString();
+        }
+
+        return result;
+    }
+
+    public String getProductByIdFromDatabase(long id) throws ProductDatabaseException {
+        String result = "";
+        List<Product> products = this.database.getAll();
+        Iterator var5 = products.iterator();
+
+        Product product;
+        do {
+            if (!var5.hasNext()) {
+                return result;
+            }
+
+            product = (Product) var5.next();
+        } while (product.getId() != id);
+
+        result = product.toString();
+        return result;
+    }
 }
