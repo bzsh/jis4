@@ -7,22 +7,24 @@ import org.apache.logging.log4j.Logger;
 
 public class UserValidationService {
     public static final Logger LOGGER = LogManager.getLogger(UserValidationService.class);
-    private User user;
 
-    public static void checkMinSymbolsInFirstAndLastName(User user) throws UserValidationException {
+    private UserValidationService() {
+    }
+
+    public static void checkMinSymbolsInFirstAndLastName(User user) {
         if (user.getFirstName().length() < 3 || user.getLastName().length() < 3) {
             throw new UserValidationException("User FirstName or LastName has less than three characters!");
         }
     }
 
-    public static void checkMMaxSymbolsInFirstAndLastName(User user) throws UserValidationException {
+    public static void checkMaxSymbolsInFirstAndLastName(User user) {
         if (user.getFirstName().length() > 15 || user.getLastName().length() > 15) {
             throw new UserValidationException("User FirstName or LastName has more than fifteen characters!");
         }
     }
 
-    public static void checkPermittedAge(User user) throws UserValidationException{
-        if(user.getAge() > 120 || user.getAge() < 0){
+    public static void checkPermittedAge(User user) {
+        if (user.getAge() > 120 || user.getAge() < 0) {
             throw new UserValidationException("User Age is out of permitted range");
         }
     }

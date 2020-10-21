@@ -18,11 +18,11 @@ public class BookRepository implements Repository<Book> {
 
     @Override
     public List<Book> findAll() {
-        return new ArrayList<Book>(books.values());
+        return new ArrayList<>(books.values());
     }
 
     @Override
-    public Book findById(String id) throws ItemNotFoundException {
+    public Book findById(String id) {
         for (Map.Entry<String, Book> entry : books.entrySet()) {
             Book book = entry.getValue();
             if (book.getId().equals(id)) {
@@ -38,15 +38,19 @@ public class BookRepository implements Repository<Book> {
     }
 
     @Override
-    public void delete(String id) throws ItemNotFoundException {
+    public void delete(String id) {
         for (Map.Entry<String, Book> entry : books.entrySet()) {
             Book book = entry.getValue();
             if (book.getId().equals(id)) {
-                if (books.remove(entry.getKey(), book)) {
-                    return;
-                }
+                books.remove(entry.getKey(), book);
+                return;
             }
         }
         throw new ItemNotFoundException("Book is not found!");
+    }
+
+    @Override
+    public int size() {
+        return books.size();
     }
 }

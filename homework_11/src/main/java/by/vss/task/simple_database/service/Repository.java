@@ -1,15 +1,15 @@
 package by.vss.task.simple_database.service;
 
-import by.vss.task.simple_database.exception.ItemNotFoundException;
-
 import java.util.List;
 
 public interface Repository<T> {
     List<T> findAll();
 
-    T findById(String id) throws ItemNotFoundException;
+    T findById(String id);
 
     void save(T item);
 
-    void delete(String id) throws ItemNotFoundException;
+    void delete(String id);
+
+    int size();
 }
