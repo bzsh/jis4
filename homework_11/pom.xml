@@ -57,11 +57,14 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
+                           <!-- <excludes>
+                                <exclude>**/bean/**/*</exclude>
+                            </excludes>-->
                             <rules>
                                 <rule>
                                     <limits>
                                         <limit>
-                                            <minimum>0.4</minimum>
+                                            <minimum>0.8</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -77,5 +80,8 @@
         <sonar.organization>bzsh</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.login>2aea8836a8b4a8a7b671f1da7ab7ec669194571a</sonar.login>
+        <sonar.coverage.exclusions>
+            **/bean/**/*
+        </sonar.coverage.exclusions>
     </properties>
 </project>
