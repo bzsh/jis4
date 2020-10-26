@@ -1,4 +1,4 @@
-package by.vss.practice.product_system.validator;
+package by.vss.practice.product_system.utill.validator;
 
 import org.junit.Test;
 

@@ -2,15 +2,10 @@ package by.vss.practice.product_system;
 
 import by.vss.practice.product_system.ui.ConsoleUI;
 
-import java.util.List;
-import java.util.function.*;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
 public class App {
     public static void main(String[] args) {
         ConsoleUI ui = new ConsoleUI();
-        ui.menu();
+        ui.mainMenu();
 
 /*
         Runnable runnable = () -> System.out.println("If i be a thread, i`ll print this string into console !");

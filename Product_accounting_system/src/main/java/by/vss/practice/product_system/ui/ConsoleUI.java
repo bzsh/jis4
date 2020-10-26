@@ -1,6 +1,7 @@
 package by.vss.practice.product_system.ui;
 
 import by.vss.practice.product_system.exception.ProductDatabaseException;
+import by.vss.practice.product_system.exception.ProductFileException;
 import by.vss.practice.product_system.service.ProductService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,21 +10,24 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import static by.vss.practice.product_system.ui.menu.MenuHolder.*;
-import static by.vss.practice.product_system.validator.ProductValidator.*;
+import static by.vss.practice.product_system.utill.validator.ProductValidator.*;
 
 public class ConsoleUI {
     public final Logger LOGGER = LogManager.getLogger("");
+    ProductService service;
     Scanner scanner;
 
     public ConsoleUI() {
+        service = new ProductService();
         scanner = new Scanner(System.in);
     }
 
-    public void menu() {
+    public void mainMenu() {
+        int result;
         loginMenu();
         while (true) {
-            int result;
-            result = mainMenu();
+            result = getAnswerMenu(MAIN_MENU, MAIN_MENU_ERROR_STRING, 8);
+
             switch (result) {
                 case 1:
                     addProductMenu();
@@ -38,40 +42,49 @@ public class ConsoleUI {
                     deleteProductMenu();
                     break;
                 case 5:
+                    updateProductMenu();
+                    break;
+                case 6:
+                    saveToFile();
+                    break;
+                case 7:
+                    loadFromFile();
+                    break;
+                case 8:
                     return;
             }
         }
     }
 
-    private int mainMenu() {
-        LOGGER.info(MAIN_MENU);
-        String answer = "";
-        int result = 0;
+    private int getAnswerMenu(String menu, String errorString, int menuSize) {
+        String answer;
+        int result;
         while (true) {
-            if (scanner.hasNext()) {
+            LOGGER.info(menu);
+            if (scanner.hasNextLine()) {
                 answer = scanner.nextLine();
-            }
-            if (isDigit(answer)) {
-                result = Integer.parseInt(answer);
-
-                if (result <= 5 && result > 0) {
-                    return result;
-                } else {
-                    errorMenu(MAIN_MENU_ERROR_STRING);
-                    return 0;
+                if (isNumber(answer)) {
+                    result = Integer.parseInt(answer);
+                    if (result <= menuSize && result > 0) {
+                        return result;
+                    } else {
+                        errorMenu(errorString);
+                    }
                 }
+                errorMenu(errorString);
             }
+            errorMenu(errorString);
         }
     }
 
     private void loginMenu() {
         while (true) {
             LOGGER.info(LOGIN_STRING);
-            if (scanner.hasNext() && checkLogin(scanner.next())) {
+            if (scanner.hasNextLine() && checkLogin(scanner.nextLine())) {
                 LOGGER.info(CORRECT_STRING);
                 while (true) {
                     LOGGER.info(PASSWORD_STRING);
-                    if (scanner.hasNext() && checkPassword(scanner.next())) {
+                    if (scanner.hasNextLine() && checkPassword(scanner.nextLine())) {
                         LOGGER.info(CORRECT_STRING);
                         return;
                     }
@@ -82,63 +95,98 @@ public class ConsoleUI {
         }
     }
 
-    private void clear() {
-        LOGGER.info(CLEAR_STRING);
-    }
+//    private void clear() {
+//        LOGGER.info(CLEAR_STRING);
+//       }
 
-    private int preAddProductMenu() {
-        int result;
+
+    private void updateProductMenu() {
+        long id = getProductIdMenu(PRE_UPDATE_PRODUCT_BY_ID_MENU);
         while (true) {
-            LOGGER.info(PRE_ADD_PRODUCT_MENU);
-            if (scanner.hasNextLine()) {
-                result = scanner.nextInt();
-                if (result <= 3 && result > 0) {
-                    return result;
-                } else {
-                    errorMenu(PRE_ADD_MENU_ERROR_STRING);
+            int result = getAnswerMenu(UPDATE_PRODUCT_BY_ID_MENU, PRE_UPDATE_MENU_ERROR_STRING, 6);
+            String string;
+            try {
+                switch (result) {
+                    case 1:
+                        string = getProductNameMenu(UPDATE_PRODUCT_NAME_MENU);
+                        if (!isQuit(string)) {
+                            service.updateProductName(id, string);
+                        }
+                        break;
+                    case 2:
+                        string = getProductPriceMenu(UPDATE_PRODUCT_PRICE_MENU);
+                        if (!isQuit(string)) {
+                            service.updateProductPrice(id, string);
+                        }
+                        break;
+                    case 3:
+                        string = getProductCategoryMenu(UPDATE_PRODUCT_CATEGORY_MENU);
+                        if (!isQuit(string)) {
+                            service.updateProductCategory(id, string);
+                        }
+                        break;
+                    case 4:
+                        string = getProductDiscountMenu(UPDATE_PRODUCT_DISCOUNT_MENU);
+                        if (!isQuit(string)) {
+                            service.updateProductDiscount(id, string);
+                        }
+                        break;
+                    case 5:
+                        string = getProductDescriptionMenu(UPDATE_PRODUCT_DESCRIPTION_MENU);
+                        if (!isQuit(string)) {
+                            service.updateProductDescription(id, string);
+                        }
+                        break;
+                    case 6:
+                        return;
                 }
+            } catch (ProductDatabaseException e) {
+                errorMenu(e.getMessage());
             }
         }
     }
 
     private void addProductMenu() {
-        ProductService service = new ProductService();
         boolean isNotAdded = true;
         String[] arr = new String[5];
+        int result = getAnswerMenu(PRE_ADD_PRODUCT_MENU, PRE_ADD_MENU_ERROR_STRING, 3);
+
         while (isNotAdded) {
-            int result = preAddProductMenu();
             switch (result) {
                 case 1:
                     arr = createDefaultProductMenu();
-                    isNotAdded = false;
                     break;
                 case 2:
                     arr = createOptionalProductMenu();
-                    isNotAdded = false;
                     break;
                 case 3:
                     return;
             }
-            if (isQuit(arr[2])) {
-                return;
-            } else {
-                service.addProductToDatabase(arr);
-                successOperation();
-                isNotAdded = false;
+
+            for (String s : arr) {
+                if (s == null || isQuit(s)) {
+                    return;
+                }
             }
+
+            service.addProductToDatabase(arr);
+            successOperation();
+            isNotAdded = false;
         }
     }
 
-    private long preGetProductByIdMenu() {
+    private long getProductIdMenu(String menu) {
+        String str;
         while (true) {
-            LOGGER.info(PRE_GET_PRODUCT_BY_ID_MENU);
-            if (scanner.hasNextLong()) {
-                return scanner.nextLong();
-            } else if (scanner.hasNext()) {
-                if (isQuit(scanner.next())) {
+            LOGGER.info(menu);
+            if (scanner.hasNextLine()) {
+                str = scanner.nextLine();
+                if (isNumber(str)) {
+                    return Long.parseLong(str);
+                } else if (isQuit(scanner.next())) {
                     return -1;
                 } else {
-                    errorMenu(PRE_GET_PRODUCT_BY_ID_MENU_ERROR_STRING);
+                    errorMenu(CORRECT_PRODUCT_ID_ERROR_STRING);
                 }
             }
         }
@@ -146,11 +194,10 @@ public class ConsoleUI {
 
     private void getProductByIdMenu() {
         String result = "";
-        long id = preGetProductByIdMenu();
+        long id = getProductIdMenu(PRE_GET_PRODUCT_BY_ID_MENU);
         if (id > 0) {
-            ProductService service = new ProductService();
             try {
-               result =  service.getProductByIdFromDatabase(id);
+                result = service.getProductInfoById(id);
             } catch (ProductDatabaseException e) {
                 errorMenu(e.getMessage());
             }
@@ -160,9 +207,8 @@ public class ConsoleUI {
 
     private void getAllProductsMenu() {
         String[] result;
-        ProductService service = new ProductService();
         try {
-           result = service.getAllProductsFromDatabase();
+            result = service.getAllProductsInfo();
             Arrays.stream(result).forEach(LOGGER::info);
         } catch (ProductDatabaseException e) {
             errorMenu(e.getMessage());
@@ -170,92 +216,93 @@ public class ConsoleUI {
 
     }
 
-    private void deleteProductMenu() {                            //TODO
+    private void deleteProductMenu() {
+        long id = getProductIdMenu(DELETE_PRODUCT_BY_ID_MENU);
+        if (id > 0) {
+            try {
+                service.deleteProductFromDatabase(id);
+                successOperation();
+            } catch (ProductDatabaseException e) {
+                errorMenu(e.getMessage());
+            }
 
+        }
     }
 
     private String[] createDefaultProductMenu() {
         String[] arr = new String[5];
-        arr[0] = addProductNameMenu();
-        if (isQuit(arr[0])) {
-            return arr;
-        }
-        arr[1] = addProductPriceMenu();
+        String result;
 
-        if (isQuit(arr[1])) {
-            return arr;
+        result = getProductNameMenu(ADD_PRODUCT_NAME_MENU);
+        if (!isQuit(result)) {
+            arr[0] = result;
         }
-        arr[2] = addProductCategoryMenu();
 
-        /*if (isQuit(arr[2])) {                                      //TODO
-            return arr;
-        }*/
+        result = getProductPriceMenu(ADD_PRODUCT_PRICE_MENU);
+        if (!isQuit(result)) {
+            arr[1] = result;
+        }
+
+        result = getProductCategoryMenu(ADD_PRODUCT_CATEGORY_MENU);
+        if (!isQuit(result)) {
+            arr[2] = result;
+        }
+
+        arr[3] = "0.01";
+        arr[4] = "default description";
         return arr;
     }
 
     private String[] createOptionalProductMenu() {
         String[] arr = createDefaultProductMenu();
-        arr[3] = addProductDiscountMenu();
+        arr[3] = getProductDiscountMenu(ADD_PRODUCT_DISCOUNT_MENU);
         if (isQuit(arr[3])) {
             return arr;
         }
-        arr[4] = addProductDescriptionMenu();
-
-        if (isQuit(arr[4])) {                                        //TODO
-            return arr;
-        }
+        arr[4] = getProductDescriptionMenu(ADD_PRODUCT_DESCRIPTION_MENU);
         return arr;
     }
 
-    private String addProductNameMenu() {
+    private String getProductNameMenu(String menu) {
         String result;
         while (true) {
-            LOGGER.info(ADD_PRODUCT_NAME_MENU);
+            LOGGER.info(menu);
             if (scanner.hasNextLine()) {
                 result = scanner.nextLine();
                 if (isNotEmptyString(result)) {
                     return result;
                 }
-            } else {
-                errorMenu(ADD_NAME_ERROR_STRING);
+                errorMenu(CORRECT_NAME_ERROR_STRING);
             }
         }
     }
 
-    private String addProductCategoryMenu() {
+    private String getProductCategoryMenu(String menu) {
         String result;
         while (true) {
-            LOGGER.info(ADD_PRODUCT_CATEGORY_MENU);
+            LOGGER.info(menu);
             if (scanner.hasNextLine()) {
                 result = scanner.nextLine();
                 if (isCategory(result) || isQuit(result)) {
                     return result.toUpperCase();
                 }
-                errorMenu(ADD_CATEGORY_ERROR_STRING);
+                errorMenu(CORRECT_CATEGORY_ERROR_STRING);
             }
         }
     }
 
-    private String addProductDescriptionMenu() {
+    private String getProductDescriptionMenu(String menu) {
         String result;
         while (true) {
-            LOGGER.info(ADD_PRODUCT_DESCRIPTION_MENU);
-            if (scanner.hasNext()) {
-                result = scanner.next();
+            LOGGER.info(menu);
+            if (scanner.hasNextLine()) {
+                result = scanner.nextLine();
                 if (isNotEmptyString(result)) {
                     return result;
                 }
-                errorMenu(ADD_DESCRIPTION_ERROR_STRING);
+                errorMenu(CORRECT_DESCRIPTION_ERROR_STRING);
             }
         }
-    }
-
-    private String addProductPriceMenu() {
-        return getBigDecimalString(ADD_PRODUCT_PRICE_MENU, ADD_PRICE_ERROR_STRING);
-    }
-
-    private String addProductDiscountMenu() {
-        return getBigDecimalString(ADD_PRODUCT_DISCOUNT_MENU, ADD_DISCOUNT_ERROR_STRING);
     }
 
     private String getBigDecimalString(String menu, String errorString) {
@@ -264,13 +311,39 @@ public class ConsoleUI {
             LOGGER.info(menu);
             if (scanner.hasNextLine()) {
                 str = scanner.nextLine();
-                if (isDigit(str)) {
+                if (isBigDecimal(str)) {
                     return str;
                 } else if (isQuit(str)) {
                     return str;
                 }
             }
             errorMenu(errorString);
+        }
+    }
+
+    private String getProductPriceMenu(String menu) {
+        return getBigDecimalString(menu, CORRECT_PRICE_ERROR_STRING);
+    }
+
+    private String getProductDiscountMenu(String menu) {
+        return getBigDecimalString(menu, CORRECT_DISCOUNT_ERROR_STRING);
+    }
+
+    private void loadFromFile() {
+        try {
+           service.loadFromFileToMemoryDatabase();
+            successOperation();
+        } catch (ProductFileException e) {
+            errorMenu(e.getMessage());
+        }
+    }
+
+    private void saveToFile() {
+        try {
+            service.saveToFileFromMemoryDatabase();
+            successOperation();
+        } catch (ProductFileException | ProductDatabaseException e) {
+            errorMenu(e.getMessage());
         }
     }
 

@@ -81,7 +81,7 @@ public class Product {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.id, this.name, this.price, this.category, this.discount, this.description});
+        return Objects.hash(this.id, this.name, this.price, this.category, this.discount, this.description);
     }
 
     public String toString() {

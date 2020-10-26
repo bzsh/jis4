@@ -30,6 +30,12 @@
             <version>1.18.12</version>
             <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.11.2</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -84,5 +90,8 @@
         <sonar.organization>bzsh</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.login>2aea8836a8b4a8a7b671f1da7ab7ec669194571a</sonar.login>
+        <sonar.coverage.exclusions>
+            **/bean/**/*
+        </sonar.coverage.exclusions>
     </properties>
 </project>
