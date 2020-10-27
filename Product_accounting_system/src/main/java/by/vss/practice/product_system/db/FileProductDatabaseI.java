@@ -37,7 +37,7 @@ public final class FileProductDatabaseI implements FileDBInterface<Product> {
             String string = MAPPER.writeValueAsString(products);
             Files.writeString(PATH, string);
         } catch (IOException e) {
-            throw new ProductFileException("Error json parsing in FileDatabase", e);
+            throw new ProductFileException("Error json serialization in FileDatabase", e);
         }
     }
 
@@ -48,7 +48,7 @@ public final class FileProductDatabaseI implements FileDBInterface<Product> {
             jsonString = Files.readString(PATH);
             products = MAPPER.readValue(jsonString, TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, Product.class));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ProductFileException("Error json deserialization in FileDatabase", e);
         }
         return products;
     }
