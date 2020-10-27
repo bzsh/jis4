@@ -1,9 +1,12 @@
 package by.vss.practice.product_system.bean;
 
 import by.vss.practice.product_system.category.Category;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@JsonAutoDetect
 public class Product {
     private long id;
     private String name;
@@ -20,6 +23,8 @@ public class Product {
         this.discount = discount;
         this.description = description;
     }
+
+    public Product(){}
 
     public long getId() {
         return this.id;

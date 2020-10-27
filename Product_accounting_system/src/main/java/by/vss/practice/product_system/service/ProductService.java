@@ -79,7 +79,7 @@ public class ProductService {
     }
 
     public void loadFromFileToMemoryDatabase() throws ProductFileException {       //TODO
-        fileDatabase.getAllFromFile();
+        inMemoryDatabase.addAll(fileDatabase.getAllFromFile());
     }
 
     public void saveToFileFromMemoryDatabase() throws ProductDatabaseException, ProductFileException {       //TODO

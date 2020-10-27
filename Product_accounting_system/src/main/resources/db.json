@@ -1,0 +1,1 @@
+[{"id":1,"name":"product","price":123.123,"category":"MEAT","discount":0.01,"description":"default description"},{"id":2,"name":"product2","price":234.234,"category":"MILK","discount":0.01,"description":"default description"},{"id":3,"name":"product3","price":345.345,"category":"FISH","discount":0.01,"description":"default description"}]

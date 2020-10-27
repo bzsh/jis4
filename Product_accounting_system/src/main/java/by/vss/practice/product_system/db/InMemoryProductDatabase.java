@@ -23,8 +23,10 @@ public class InMemoryProductDatabase implements InMemoryDBInterface<Product> {
     }
 
     @Override
-    public void addAll(List<Product> types) {
-
+    public void addAll(List<Product> productList) {
+        for(Product product: productList){
+            products.put(product.getId(), product);
+        }
     }
 
     @Override
