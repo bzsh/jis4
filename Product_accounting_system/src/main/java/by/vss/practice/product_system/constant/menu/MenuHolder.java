@@ -1,6 +1,9 @@
-package by.vss.practice.product_system.ui.menu;
+package by.vss.practice.product_system.constant.menu;
 
-public class MenuHolder {
+public final class MenuHolder {
+    public static final String DEFAULT_DISCOUNT = "0.01";
+    public static final String DEFAULT_DESCRIPTION = "default description";
+
     public final static String MAIN_MENU =
             "\n-----------------------------------\n" +
                     "Welcome to Product Accounting System" +

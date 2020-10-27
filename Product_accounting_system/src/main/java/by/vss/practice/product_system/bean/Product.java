@@ -24,7 +24,8 @@ public class Product {
         this.description = description;
     }
 
-    public Product(){}
+    public Product() {
+    }
 
     public long getId() {
         return this.id;
@@ -78,7 +79,7 @@ public class Product {
         if (this == o) {
             return true;
         } else if (o != null && this.getClass() == o.getClass()) {
-            Product product = (Product)o;
+            Product product = (Product) o;
             return this.id == product.id && Objects.equals(this.name, product.name) && Objects.equals(this.price, product.price) && this.category == product.category && Objects.equals(this.discount, product.discount) && Objects.equals(this.description, product.description);
         } else {
             return false;

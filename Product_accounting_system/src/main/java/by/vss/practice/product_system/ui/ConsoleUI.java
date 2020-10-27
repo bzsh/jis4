@@ -1,5 +1,6 @@
 package by.vss.practice.product_system.ui;
 
+import by.vss.practice.product_system.constant.config.ConfigHolder;
 import by.vss.practice.product_system.exception.ProductDatabaseException;
 import by.vss.practice.product_system.exception.ProductFileException;
 import by.vss.practice.product_system.service.ProductService;
@@ -9,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import static by.vss.practice.product_system.ui.menu.MenuHolder.*;
+import static by.vss.practice.product_system.constant.menu.MenuHolder.*;
 import static by.vss.practice.product_system.utill.validator.ProductValidator.*;
 
 public class ConsoleUI {
@@ -94,11 +95,6 @@ public class ConsoleUI {
             LOGGER.info(LOGIN_ERROR_STRING);
         }
     }
-
-//    private void clear() {
-//        LOGGER.info(CLEAR_STRING);
-//       }
-
 
     private void updateProductMenu() {
         long id = getProductIdMenu(PRE_UPDATE_PRODUCT_BY_ID_MENU);
@@ -248,8 +244,8 @@ public class ConsoleUI {
             arr[2] = result;
         }
 
-        arr[3] = "0.01";
-        arr[4] = "default description";
+        arr[3] = DEFAULT_DISCOUNT;
+        arr[4] = DEFAULT_DESCRIPTION;
         return arr;
     }
 
@@ -331,7 +327,7 @@ public class ConsoleUI {
 
     private void loadFromFile() {
         try {
-           service.loadFromFileToMemoryDatabase();
+            service.loadFromFileToMemoryDatabase();
             successOperation();
         } catch (ProductFileException e) {
             errorMenu(e.getMessage());

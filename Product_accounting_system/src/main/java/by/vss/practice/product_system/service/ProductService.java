@@ -2,8 +2,8 @@ package by.vss.practice.product_system.service;
 
 import by.vss.practice.product_system.bean.Product;
 import by.vss.practice.product_system.category.Category;
-import by.vss.practice.product_system.db.FileProductDatabase;
-import by.vss.practice.product_system.db.InMemoryProductDatabase;
+import by.vss.practice.product_system.db.FileProductDatabaseI;
+import by.vss.practice.product_system.db.InMemoryProductDatabaseI;
 import by.vss.practice.product_system.exception.ProductDatabaseException;
 import by.vss.practice.product_system.exception.ProductFileException;
 import by.vss.practice.product_system.utill.IdCreator;
@@ -13,10 +13,14 @@ import java.util.List;
 
 
 public class ProductService {
-    private final InMemoryProductDatabase inMemoryDatabase = InMemoryProductDatabase.getInstance();    //TODO Have To use an ProductService Interface !!!
-    private final FileProductDatabase fileDatabase = FileProductDatabase.getInstance();
+    private final InMemoryProductDatabaseI inMemoryDatabase = InMemoryProductDatabaseI.getInstance();
+    private final FileProductDatabaseI fileDatabase = FileProductDatabaseI.getInstance();
+    private BigDecimal bigDecimalPrice;
+    private BigDecimal bigDecimalDiscount;
+    private Category categoryEnum;
+    private Product product;
 
-    public void addProductToDatabase(String[] arr) {                         //TODO  should i validate product parameters here and throw an exception if wrong..?
+    public void addProductToDatabase(String[] arr) {
         Product product = this.createProduct(arr[0], arr[1], arr[2], arr[3], arr[4]);
         this.inMemoryDatabase.add(product);
     }
@@ -78,11 +82,11 @@ public class ProductService {
         }
     }
 
-    public void loadFromFileToMemoryDatabase() throws ProductFileException {       //TODO
+    public void loadFromFileToMemoryDatabase() throws ProductFileException {
         inMemoryDatabase.addAll(fileDatabase.getAllFromFile());
     }
 
-    public void saveToFileFromMemoryDatabase() throws ProductDatabaseException, ProductFileException {       //TODO
+    public void saveToFileFromMemoryDatabase() throws ProductDatabaseException, ProductFileException {
         fileDatabase.addAllToFile(getAllProductsFromDatabase());
     }
 
@@ -96,10 +100,6 @@ public class ProductService {
     }
 
     private Product createProduct(String name, String price, String category, String discount, String description) {
-        BigDecimal bigDecimalPrice;
-        BigDecimal bigDecimalDiscount;
-        Product product;
-        Category categoryEnum;
         bigDecimalPrice = new BigDecimal(price);
         bigDecimalDiscount = new BigDecimal(discount);
         categoryEnum = Category.valueOf(category);
