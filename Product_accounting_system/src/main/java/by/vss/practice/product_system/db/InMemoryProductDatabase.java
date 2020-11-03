@@ -5,16 +5,30 @@ import by.vss.practice.product_system.exception.ProductDatabaseException;
 
 import java.util.*;
 
-public final class InMemoryProductDatabaseI implements InMemoryDBInterface<Product> {
-    private static final InMemoryProductDatabaseI INSTANCE = new InMemoryProductDatabaseI();
+import static by.vss.practice.product_system.constant.error.ErrorHolder.*;
+
+public final class InMemoryProductDatabase implements InMemoryDBInterface<Product> {
+    private static final InMemoryProductDatabase INSTANCE = new InMemoryProductDatabase();
     private final Map<Long, Product> products;
 
-    private InMemoryProductDatabaseI() {
+    private InMemoryProductDatabase() {
         products = new HashMap<>();
     }
 
-    public static InMemoryProductDatabaseI getInstance() {
+    public static InMemoryProductDatabase getInstance() {
         return INSTANCE;
+    }
+
+    @Override
+    public void resetDatabase() {
+        if (products.size() > 0) {
+            products.clear();
+        }
+    }
+
+    @Override
+    public int getDatabaseSize() {
+        return products.size();
     }
 
     @Override
@@ -30,32 +44,32 @@ public final class InMemoryProductDatabaseI implements InMemoryDBInterface<Produ
     }
 
     @Override
-    public List<Product> getAll() throws ProductDatabaseException {                         //todo
+    public List<Product> getAll() throws ProductDatabaseException {
         List<Product> result = new ArrayList<>(products.values());
-        if (result.size() > 0) {
+        if (!result.isEmpty()) {
             return result;
         }
-        throw new ProductDatabaseException("There are no any products in database!");
+        throw new ProductDatabaseException(GET_ALL_PRODUCTS_ERROR_MESSAGE);
     }
 
     @Override
     public Product get(Long id) throws ProductDatabaseException {
         if (products.containsKey(id)) {
-            for (Map.Entry<Long, Product> productEntry : products.entrySet()) {               //todo
+            for (Map.Entry<Long, Product> productEntry : products.entrySet()) {
                 if (productEntry.getKey().equals(id)) {
                     return productEntry.getValue();
                 }
             }
         }
-        throw new ProductDatabaseException("There are no products with such Id");
+        throw new ProductDatabaseException(GET_PRODUCT_BY_ID_ERROR_MESSAGE);
     }
 
     @Override
-    public void remove(Long id) throws ProductDatabaseException {                              //todo
+    public void remove(Long id) throws ProductDatabaseException {
         if (products.containsKey(id)) {
             products.entrySet().removeIf(entry -> entry.getKey().equals(id));
         } else {
-            throw new ProductDatabaseException("There are no products with such Id to remove");
+            throw new ProductDatabaseException(REMOVE_PRODUCT_BY_ID_ERROR_MESSAGE);
         }
     }
 }

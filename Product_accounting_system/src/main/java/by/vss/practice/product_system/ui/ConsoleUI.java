@@ -1,22 +1,21 @@
 package by.vss.practice.product_system.ui;
 
-import by.vss.practice.product_system.constant.config.ConfigHolder;
 import by.vss.practice.product_system.exception.ProductDatabaseException;
-import by.vss.practice.product_system.exception.ProductFileException;
+import by.vss.practice.product_system.exception.ProductFileDatabaseException;
 import by.vss.practice.product_system.service.ProductService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 import static by.vss.practice.product_system.constant.menu.MenuHolder.*;
 import static by.vss.practice.product_system.utill.validator.ProductValidator.*;
 
 public class ConsoleUI {
-    public final Logger LOGGER = LogManager.getLogger("");
-    ProductService service;
-    Scanner scanner;
+    private final Logger LOGGER = LogManager.getLogger("");
+    private final ProductService service;
+    private final Scanner scanner;
 
     public ConsoleUI() {
         service = new ProductService();
@@ -27,7 +26,7 @@ public class ConsoleUI {
         int result;
         loginMenu();
         while (true) {
-            result = getAnswerMenu(MAIN_MENU, MAIN_MENU_ERROR_STRING, 8);
+            result = getAnswerMenu(MAIN_MENU, MAIN_MENU_ERROR_STRING, NUMBER_OF_MAIN_MENU_ITEMS);
 
             switch (result) {
                 case 1:
@@ -37,21 +36,27 @@ public class ConsoleUI {
                     getProductByIdMenu();
                     break;
                 case 3:
-                    getAllProductsMenu();
+                    getAllProductsByCategoryMenu();
                     break;
                 case 4:
-                    deleteProductMenu();
+                    getAllProductsMenu();
                     break;
                 case 5:
-                    updateProductMenu();
+                    deleteProductMenu();
                     break;
                 case 6:
-                    saveToFile();
+                    updateProductMenu();
                     break;
                 case 7:
-                    loadFromFile();
+                    updateAllProductsDiscountsByCategory();
                     break;
                 case 8:
+                    saveToFile();
+                    break;
+                case 9:
+                    loadFromFile();
+                    break;
+                case 10:
                     return;
             }
         }
@@ -99,7 +104,7 @@ public class ConsoleUI {
     private void updateProductMenu() {
         long id = getProductIdMenu(PRE_UPDATE_PRODUCT_BY_ID_MENU);
         while (true) {
-            int result = getAnswerMenu(UPDATE_PRODUCT_BY_ID_MENU, PRE_UPDATE_MENU_ERROR_STRING, 6);
+            int result = getAnswerMenu(UPDATE_PRODUCT_BY_ID_MENU, PRE_UPDATE_MENU_ERROR_STRING, NUMBER_OF_UPDATE_MENU_ITEMS);
             String string;
             try {
                 switch (result) {
@@ -145,7 +150,7 @@ public class ConsoleUI {
     private void addProductMenu() {
         boolean isNotAdded = true;
         String[] arr = new String[5];
-        int result = getAnswerMenu(PRE_ADD_PRODUCT_MENU, PRE_ADD_MENU_ERROR_STRING, 3);
+        int result = getAnswerMenu(PRE_ADD_PRODUCT_MENU, PRE_ADD_MENU_ERROR_STRING, NUMBER_OF_PRE_ADD_MENU_ITEMS);
 
         while (isNotAdded) {
             switch (result) {
@@ -164,7 +169,6 @@ public class ConsoleUI {
                     return;
                 }
             }
-
             service.addProductToDatabase(arr);
             successOperation();
             isNotAdded = false;
@@ -198,14 +202,48 @@ public class ConsoleUI {
                 errorMenu(e.getMessage());
             }
             LOGGER.info(result);
+            successOperation();
         }
     }
 
+    private void getAllProductsByCategoryMenu() {
+        String result = getProductCategoryMenu(ADD_PRODUCT_CATEGORY_MENU);
+        if (isQuit(result)) {
+            return;
+        }
+        try {
+            service.getAllProductsInfoByCategory(result).forEach(LOGGER::info);
+            successOperation();
+        } catch (ProductDatabaseException e) {
+            errorMenu(e.getMessage());
+        }
+    }
+
+    private void updateAllProductsDiscountsByCategory() {
+        String categoryString = getProductCategoryMenu(ADD_PRODUCT_CATEGORY_MENU);
+
+        if (isQuit(categoryString)) {
+            return;
+        }
+        String discountString = getProductDiscountMenu(UPDATE_PRODUCT_DISCOUNT_MENU);
+        if (isQuit(discountString)) {
+            return;
+        }
+        try {
+            service.updateAllProductsDiscountsByCategory(categoryString, discountString);
+            successOperation();
+        } catch (ProductDatabaseException e) {
+            errorMenu(e.getMessage());
+        }
+
+    }
+
     private void getAllProductsMenu() {
-        String[] result;
+        List<String> result;
         try {
             result = service.getAllProductsInfo();
-            Arrays.stream(result).forEach(LOGGER::info);
+            result.forEach(LOGGER::info);
+            successOperation();
         } catch (ProductDatabaseException e) {
             errorMenu(e.getMessage());
         }
@@ -221,7 +259,6 @@ public class ConsoleUI {
             } catch (ProductDatabaseException e) {
                 errorMenu(e.getMessage());
             }
-
         }
     }
 
@@ -329,7 +366,7 @@ public class ConsoleUI {
         try {
             service.loadFromFileToMemoryDatabase();
             successOperation();
-        } catch (ProductFileException e) {
+        } catch (ProductFileDatabaseException e) {
             errorMenu(e.getMessage());
         }
     }
@@ -338,7 +375,7 @@ public class ConsoleUI {
         try {
             service.saveToFileFromMemoryDatabase();
             successOperation();
-        } catch (ProductFileException | ProductDatabaseException e) {
+        } catch (ProductFileDatabaseException | ProductDatabaseException e) {
             errorMenu(e.getMessage());
         }
     }
@@ -354,3 +391,4 @@ public class ConsoleUI {
         scanner.nextLine();
     }
 }
+

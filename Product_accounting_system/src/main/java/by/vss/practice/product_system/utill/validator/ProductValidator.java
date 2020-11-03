@@ -12,6 +12,9 @@ public class ProductValidator {
     private static final Pattern BIG_DECIMAL_PATTERN = Pattern.compile("\\d+(\\.\\d{1,3})?");
     private static Matcher matcher;
 
+    private ProductValidator() {
+    }
+
     public static boolean isNumber(String answer) {
         matcher = NUMBER_PATTERN.matcher(answer);
         return matcher.matches();
@@ -43,7 +46,6 @@ public class ProductValidator {
     public static boolean checkPassword(String password) {
         return password.equals(ConfigHolder.PASSWORD);
     }
-
 
 }
 
