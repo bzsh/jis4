@@ -1,10 +1,13 @@
 package by.vss.practice.product_system.utill.validator;
 
-import by.vss.practice.product_system.constant.config.ConfigHolder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component
 public class ProductValidator {
     private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+");
     private static final Pattern QUITE_PATTERN = Pattern.compile("(QUIT)|(EXIT)");
@@ -12,39 +15,45 @@ public class ProductValidator {
     private static final Pattern BIG_DECIMAL_PATTERN = Pattern.compile("\\d+(\\.\\d{1,3})?");
     private static Matcher matcher;
 
-    private ProductValidator() {
-    }
+    @Autowired
+    Properties properties;
 
-    public static boolean isNumber(String answer) {
+    public  boolean isNumber(String answer) {
         matcher = NUMBER_PATTERN.matcher(answer);
         return matcher.matches();
     }
 
-    public static boolean isBigDecimal(String answer) {
+    public  boolean isBigDecimal(String answer) {
         matcher = BIG_DECIMAL_PATTERN.matcher(answer);
         return matcher.matches();
     }
 
-    public static boolean isQuit(String answer) {
+    public  boolean isQuit(String answer) {
         matcher = QUITE_PATTERN.matcher(answer.toUpperCase());
         return matcher.matches();
     }
 
-    public static boolean isCategory(String answer) {
+    public  boolean isCategory(String answer) {
         matcher = CATEGORY_PATTERN.matcher(answer.toUpperCase());
         return matcher.matches();
     }
 
-    public static boolean isNotEmptyString(String answer) {
+    public  boolean isNotEmptyString(String answer) {
         return !answer.isEmpty();
     }
 
-    public static boolean checkLogin(String login) {
-        return login.equals(ConfigHolder.LOGIN);
+    public boolean checkLogin(String login) {
+        if(login != null) {
+            return login.equals(properties.getProperty("login"));
+        }
+        return false;
     }
 
-    public static boolean checkPassword(String password) {
-        return password.equals(ConfigHolder.PASSWORD);
+    public boolean checkPassword(String password) {
+        if(password != null) {
+            return password.equals(properties.getProperty("password"));
+        }
+        return false;
     }
 
 }

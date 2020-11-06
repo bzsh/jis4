@@ -1,23 +1,19 @@
 package by.vss.practice.product_system.db;
 
+import by.vss.practice.product_system.bean.Entity;
 import by.vss.practice.product_system.bean.Product;
 import by.vss.practice.product_system.exception.ProductDatabaseException;
+import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static by.vss.practice.product_system.constant.error.ErrorHolder.*;
+import static by.vss.practice.product_system.db.InMemoryDatabase.*;
 
-public final class InMemoryProductDatabase implements InMemoryDBInterface<Product> {
-    private static final InMemoryProductDatabase INSTANCE = new InMemoryProductDatabase();
-    private final Map<Long, Product> products;
-
-    private InMemoryProductDatabase() {
-        products = new HashMap<>();
-    }
-
-    public static InMemoryProductDatabase getInstance() {
-        return INSTANCE;
-    }
+@Component
+public final class ProductServiceS implements ProductServiceI<Product> {
 
     @Override
     public void resetDatabase() {
@@ -31,9 +27,17 @@ public final class InMemoryProductDatabase implements InMemoryDBInterface<Produc
         return products.size();
     }
 
+    public int getDatabaseSize(Map<Long, ? extends Entity> database) {
+        return database.size();
+    }
+
     @Override
     public void add(Product product) {
         products.put(product.getId(), product);
+    }
+
+     public <T extends Entity> void add(T entity, Map<Long, T> database) {
+        database.put(entity.getId(), entity);
     }
 
     @Override

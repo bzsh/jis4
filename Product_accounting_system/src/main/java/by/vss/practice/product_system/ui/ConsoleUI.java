@@ -2,25 +2,30 @@ package by.vss.practice.product_system.ui;
 
 import by.vss.practice.product_system.exception.ProductDatabaseException;
 import by.vss.practice.product_system.exception.ProductFileDatabaseException;
-import by.vss.practice.product_system.service.ProductService;
+import by.vss.practice.product_system.service.ProductController;
+import by.vss.practice.product_system.utill.validator.ProductValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Scanner;
 
 import static by.vss.practice.product_system.constant.menu.MenuHolder.*;
-import static by.vss.practice.product_system.utill.validator.ProductValidator.*;
 
+@Component
 public class ConsoleUI {
-    private final Logger LOGGER = LogManager.getLogger("");
-    private final ProductService service;
-    private final Scanner scanner;
 
-    public ConsoleUI() {
-        service = new ProductService();
-        scanner = new Scanner(System.in);
-    }
+    private final Logger LOGGER = LogManager.getLogger("");
+
+    @Autowired
+    private ProductController service;
+    @Autowired
+    private Scanner scanner;
+    @Autowired
+    ProductValidator productValidator;
+
 
     public void mainMenu() {
         int result;
@@ -69,7 +74,7 @@ public class ConsoleUI {
             LOGGER.info(menu);
             if (scanner.hasNextLine()) {
                 answer = scanner.nextLine();
-                if (isNumber(answer)) {
+                if (productValidator.isNumber(answer)) {
                     result = Integer.parseInt(answer);
                     if (result <= menuSize && result > 0) {
                         return result;
@@ -86,11 +91,11 @@ public class ConsoleUI {
     private void loginMenu() {
         while (true) {
             LOGGER.info(LOGIN_STRING);
-            if (scanner.hasNextLine() && checkLogin(scanner.nextLine())) {
+            if (scanner.hasNextLine() && productValidator.checkLogin(scanner.nextLine())) {
                 LOGGER.info(CORRECT_STRING);
                 while (true) {
                     LOGGER.info(PASSWORD_STRING);
-                    if (scanner.hasNextLine() && checkPassword(scanner.nextLine())) {
+                    if (scanner.hasNextLine() && productValidator.checkPassword(scanner.nextLine())) {
                         LOGGER.info(CORRECT_STRING);
                         return;
                     }
@@ -110,31 +115,31 @@ public class ConsoleUI {
                 switch (result) {
                     case 1:
                         string = getProductNameMenu(UPDATE_PRODUCT_NAME_MENU);
-                        if (!isQuit(string)) {
+                        if (!productValidator.isQuit(string)) {
                             service.updateProductName(id, string);
                         }
                         break;
                     case 2:
                         string = getProductPriceMenu(UPDATE_PRODUCT_PRICE_MENU);
-                        if (!isQuit(string)) {
+                        if (!productValidator.isQuit(string)) {
                             service.updateProductPrice(id, string);
                         }
                         break;
                     case 3:
                         string = getProductCategoryMenu(UPDATE_PRODUCT_CATEGORY_MENU);
-                        if (!isQuit(string)) {
+                        if (!productValidator.isQuit(string)) {
                             service.updateProductCategory(id, string);
                         }
                         break;
                     case 4:
                         string = getProductDiscountMenu(UPDATE_PRODUCT_DISCOUNT_MENU);
-                        if (!isQuit(string)) {
+                        if (!productValidator.isQuit(string)) {
                             service.updateProductDiscount(id, string);
                         }
                         break;
                     case 5:
                         string = getProductDescriptionMenu(UPDATE_PRODUCT_DESCRIPTION_MENU);
-                        if (!isQuit(string)) {
+                        if (!productValidator.isQuit(string)) {
                             service.updateProductDescription(id, string);
                         }
                         break;
@@ -165,7 +170,7 @@ public class ConsoleUI {
             }
 
             for (String s : arr) {
-                if (s == null || isQuit(s)) {
+                if (s == null || productValidator.isQuit(s)) {
                     return;
                 }
             }
@@ -181,9 +186,9 @@ public class ConsoleUI {
             LOGGER.info(menu);
             if (scanner.hasNextLine()) {
                 str = scanner.nextLine();
-                if (isNumber(str)) {
+                if (productValidator.isNumber(str)) {
                     return Long.parseLong(str);
-                } else if (isQuit(scanner.next())) {
+                } else if (productValidator.isQuit(scanner.next())) {
                     return -1;
                 } else {
                     errorMenu(CORRECT_PRODUCT_ID_ERROR_STRING);
@@ -208,7 +213,7 @@ public class ConsoleUI {
 
     private void getAllProductsByCategoryMenu() {
         String result = getProductCategoryMenu(ADD_PRODUCT_CATEGORY_MENU);
-        if (isQuit(result)) {
+        if (productValidator.isQuit(result)) {
             return;
         }
         try {
@@ -222,11 +227,11 @@ public class ConsoleUI {
     private void updateAllProductsDiscountsByCategory() {
         String categoryString = getProductCategoryMenu(ADD_PRODUCT_CATEGORY_MENU);
 
-        if (isQuit(categoryString)) {
+        if (productValidator.isQuit(categoryString)) {
             return;
         }
         String discountString = getProductDiscountMenu(UPDATE_PRODUCT_DISCOUNT_MENU);
-        if (isQuit(discountString)) {
+        if (productValidator.isQuit(discountString)) {
             return;
         }
         try {
@@ -267,17 +272,17 @@ public class ConsoleUI {
         String result;
 
         result = getProductNameMenu(ADD_PRODUCT_NAME_MENU);
-        if (!isQuit(result)) {
+        if (!productValidator.isQuit(result)) {
             arr[0] = result;
         }
 
         result = getProductPriceMenu(ADD_PRODUCT_PRICE_MENU);
-        if (!isQuit(result)) {
+        if (!productValidator.isQuit(result)) {
             arr[1] = result;
         }
 
         result = getProductCategoryMenu(ADD_PRODUCT_CATEGORY_MENU);
-        if (!isQuit(result)) {
+        if (!productValidator.isQuit(result)) {
             arr[2] = result;
         }
 
@@ -289,7 +294,7 @@ public class ConsoleUI {
     private String[] createOptionalProductMenu() {
         String[] arr = createDefaultProductMenu();
         arr[3] = getProductDiscountMenu(ADD_PRODUCT_DISCOUNT_MENU);
-        if (isQuit(arr[3])) {
+        if (productValidator.isQuit(arr[3])) {
             return arr;
         }
         arr[4] = getProductDescriptionMenu(ADD_PRODUCT_DESCRIPTION_MENU);
@@ -302,7 +307,7 @@ public class ConsoleUI {
             LOGGER.info(menu);
             if (scanner.hasNextLine()) {
                 result = scanner.nextLine();
-                if (isNotEmptyString(result)) {
+                if (productValidator.isNotEmptyString(result)) {
                     return result;
                 }
                 errorMenu(CORRECT_NAME_ERROR_STRING);
@@ -316,7 +321,7 @@ public class ConsoleUI {
             LOGGER.info(menu);
             if (scanner.hasNextLine()) {
                 result = scanner.nextLine();
-                if (isCategory(result) || isQuit(result)) {
+                if (productValidator.isCategory(result) || productValidator.isQuit(result)) {
                     return result.toUpperCase();
                 }
                 errorMenu(CORRECT_CATEGORY_ERROR_STRING);
@@ -330,7 +335,7 @@ public class ConsoleUI {
             LOGGER.info(menu);
             if (scanner.hasNextLine()) {
                 result = scanner.nextLine();
-                if (isNotEmptyString(result)) {
+                if (productValidator.isNotEmptyString(result)) {
                     return result;
                 }
                 errorMenu(CORRECT_DESCRIPTION_ERROR_STRING);
@@ -344,9 +349,9 @@ public class ConsoleUI {
             LOGGER.info(menu);
             if (scanner.hasNextLine()) {
                 str = scanner.nextLine();
-                if (isBigDecimal(str)) {
+                if (productValidator.isBigDecimal(str)) {
                     return str;
-                } else if (isQuit(str)) {
+                } else if (productValidator.isQuit(str)) {
                     return str;
                 }
             }

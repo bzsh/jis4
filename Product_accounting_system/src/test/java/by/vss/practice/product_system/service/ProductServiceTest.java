@@ -9,12 +9,12 @@ import java.math.BigDecimal;
 
 public class ProductServiceTest {
 
-    ProductService service;
+    ProductController service;
     Product product;
 
     @Before
     public void setup() {
-        service = new ProductService();
+        service = new ProductController();
         product = new Product(1, "product", new BigDecimal("0.123"), Category.MILK, new BigDecimal("0.01"), "description");
     }
 

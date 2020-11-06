@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @JsonAutoDetect
-public class Product {
+public class Product extends Entity{
     private long id;
     private String name;
     private BigDecimal price;

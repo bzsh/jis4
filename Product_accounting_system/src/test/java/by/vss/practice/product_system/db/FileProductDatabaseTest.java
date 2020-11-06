@@ -5,19 +5,23 @@ import by.vss.practice.product_system.category.Category;
 import by.vss.practice.product_system.exception.ProductFileDatabaseException;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
+
 public class FileProductDatabaseTest {
-    FileProductDatabase fileDatabase;
+    FileProductJsonReaderWriter fileDatabase;
     List<Product> products;
+
+    @Autowired
+    FileProductJsonReaderWriter fileProductDatabase;
 
     @Before
     public void setup() {
-        fileDatabase = FileProductDatabase.getInstance();
         products = List.of(
                 new Product(1, "product1", new BigDecimal("123.0"), Category.MILK, new BigDecimal("0.1"), "description"),
                 new Product(2, "product2", new BigDecimal("123.0"), Category.FISH, new BigDecimal("0.0"), "description"),
@@ -33,8 +37,7 @@ public class FileProductDatabaseTest {
 
     @Test
     public void getInstance() {
-        FileProductDatabase fileDatabaseTwo = FileProductDatabase.getInstance();
-        assertEquals(fileDatabase, fileDatabaseTwo);
+        assertEquals(fileDatabase, fileProductDatabase);
     }
 
     @Test

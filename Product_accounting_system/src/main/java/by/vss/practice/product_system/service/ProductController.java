@@ -2,11 +2,13 @@ package by.vss.practice.product_system.service;
 
 import by.vss.practice.product_system.bean.Product;
 import by.vss.practice.product_system.category.Category;
-import by.vss.practice.product_system.db.FileProductDatabase;
-import by.vss.practice.product_system.db.InMemoryProductDatabase;
+import by.vss.practice.product_system.db.FileProductJsonReaderWriter;
+import by.vss.practice.product_system.db.ProductServiceI;
 import by.vss.practice.product_system.exception.ProductDatabaseException;
 import by.vss.practice.product_system.exception.ProductFileDatabaseException;
 import by.vss.practice.product_system.utill.IdCreator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,29 +16,28 @@ import java.util.stream.Collectors;
 
 import static by.vss.practice.product_system.constant.error.ErrorHolder.*;
 
+@Component
+public class ProductController {
 
-public class ProductService implements ProductServiceInterface {
-    private final InMemoryProductDatabase inMemoryDatabase = InMemoryProductDatabase.getInstance();
-    private final FileProductDatabase fileDatabase = FileProductDatabase.getInstance();
+    @Autowired
+    private ProductServiceI<Product> productService;
+    @Autowired
+    private FileProductJsonReaderWriter fileDatabase;
 
-    @Override
     public void addProductToDatabase(String[] arr) {
         Product product = this.createProduct(arr[0], arr[1], arr[2], arr[3], arr[4]);
-        this.inMemoryDatabase.add(product);
+        productService.add(product);
     }
 
-    @Override
     public void deleteProductFromDatabase(long productId) throws ProductDatabaseException {
-        this.inMemoryDatabase.remove(productId);
+        productService.remove(productId);
     }
 
-    @Override
     public List<String> getAllProductsInfo() throws ProductDatabaseException {
         List<Product> products = getAllProductsFromDatabase();
         return products.stream().map(this::getProductToViewString).collect(Collectors.toList());
     }
 
-    @Override
     public List<String> getAllProductsInfoByCategory(String categoryString) throws ProductDatabaseException {
         Category category = Category.valueOf(categoryString);
         List<Product> products = getAllProductsFromDatabase();
@@ -51,13 +52,11 @@ public class ProductService implements ProductServiceInterface {
         }
     }
 
-    @Override
     public String getProductInfoById(long id) throws ProductDatabaseException {
         Product product = getProductByIdFromDatabase(id);
         return getProductToViewString(product);
     }
 
-    @Override
     public void updateAllProductsDiscountsByCategory(String categoryString, String discountString) throws ProductDatabaseException {
         Category category = Category.valueOf(categoryString);
         BigDecimal discount = new BigDecimal(discountString);
@@ -70,7 +69,6 @@ public class ProductService implements ProductServiceInterface {
         }
     }
 
-    @Override
     public void updateProductName(Long id, String name) throws ProductDatabaseException {
         Product product = getProductByIdFromDatabase(id);
         if (!product.getName().equals(name) && !name.isEmpty()) {
@@ -80,7 +78,6 @@ public class ProductService implements ProductServiceInterface {
         }
     }
 
-    @Override
     public void updateProductPrice(Long id, String priceString) throws ProductDatabaseException {
         Product product = getProductByIdFromDatabase(id);
         BigDecimal price = new BigDecimal(priceString);
@@ -91,7 +88,6 @@ public class ProductService implements ProductServiceInterface {
         }
     }
 
-    @Override
     public void updateProductCategory(Long id, String categoryString) throws ProductDatabaseException {
         Product product = getProductByIdFromDatabase(id);
         Category category = Category.valueOf(categoryString);
@@ -102,7 +98,6 @@ public class ProductService implements ProductServiceInterface {
         }
     }
 
-    @Override
     public void updateProductDiscount(Long id, String discountString) throws ProductDatabaseException {
         Product product = getProductByIdFromDatabase(id);
         BigDecimal discount = new BigDecimal(discountString);
@@ -113,17 +108,14 @@ public class ProductService implements ProductServiceInterface {
         }
     }
 
-    @Override
     public void loadFromFileToMemoryDatabase() throws ProductFileDatabaseException {
-        inMemoryDatabase.addAll(fileDatabase.getAllFromFile());
+        productService.addAll(fileDatabase.getAllFromFile());
     }
 
-    @Override
     public void saveToFileFromMemoryDatabase() throws ProductDatabaseException, ProductFileDatabaseException {
         fileDatabase.addAllToFile(getAllProductsFromDatabase());
     }
 
-    @Override
     public void updateProductDescription(Long id, String description) throws ProductDatabaseException {
         Product product = getProductByIdFromDatabase(id);
         if (!product.getDescription().equals(description) && !description.isEmpty()) {
@@ -141,11 +133,11 @@ public class ProductService implements ProductServiceInterface {
     }
 
     private Product getProductByIdFromDatabase(Long id) throws ProductDatabaseException {
-        return this.inMemoryDatabase.get(id);
+        return productService.get(id);
     }
 
     private List<Product> getAllProductsFromDatabase() throws ProductDatabaseException {
-        return this.inMemoryDatabase.getAll();
+        return productService.getAll();
     }
 
     private String getProductToViewString(Product product) {

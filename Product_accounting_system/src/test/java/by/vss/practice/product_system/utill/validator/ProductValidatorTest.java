@@ -1,10 +1,14 @@
 package by.vss.practice.product_system.utill.validator;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.*;
 
 public class ProductValidatorTest {
+
+    @Autowired
+    private ProductValidator productValidator;
 
     @Test
     public void isDigit() {
@@ -12,30 +16,30 @@ public class ProductValidatorTest {
 
     @Test
     public void isQuit() {
-        assertTrue(ProductValidator.isQuit("quit"));
+        assertTrue(productValidator.isQuit("quit"));
     }
     @Test
     public void isNotQuit() {
-        assertFalse(ProductValidator.isQuit(""));
+        assertFalse(productValidator.isQuit(""));
     }
 
     @Test
     public void isExit() {
-        assertTrue(ProductValidator.isQuit("exit"));
+        assertTrue(productValidator.isQuit("exit"));
     }
     @Test
     public void isNotExit() {
-        assertFalse(ProductValidator.isQuit(""));
+        assertFalse(productValidator.isQuit(""));
     }
 
     @Test
     public void isCategory() {
-        assertTrue(ProductValidator.isCategory("vegetables"));
+        assertTrue(productValidator.isCategory("vegetables"));
     }
 
     @Test
     public void isNotCategory() {
-        assertFalse(ProductValidator.isCategory("smth"));
+        assertFalse(productValidator.isCategory("smth"));
     }
 
     @Test

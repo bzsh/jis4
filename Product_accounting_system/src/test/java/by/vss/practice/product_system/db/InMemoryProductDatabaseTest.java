@@ -5,6 +5,7 @@ import by.vss.practice.product_system.category.Category;
 import by.vss.practice.product_system.exception.ProductDatabaseException;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,13 +13,13 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class InMemoryProductDatabaseTest {
-    InMemoryProductDatabase inMemoryDatabase;
+    @Autowired
+    ProductServiceS inMemoryDatabase;
     Product product;
     List<Product> products;
 
     @Before
     public void setup() {
-        inMemoryDatabase = InMemoryProductDatabase.getInstance();
         product = new Product(1, "product", new BigDecimal("123.1"), Category.MILK, new BigDecimal("0.12"), "description");
         products = List.of(
                 new Product(1, "product1", new BigDecimal("123.0"), Category.MILK, new BigDecimal("0.1"), "description"),
@@ -35,8 +36,7 @@ public class InMemoryProductDatabaseTest {
 
     @Test
     public void getInstance() {
-        InMemoryProductDatabase actual = InMemoryProductDatabase.getInstance();
-        assertEquals(inMemoryDatabase, actual);
+        assertEquals(inMemoryDatabase, inMemoryDatabase);
     }
 
     @Test

@@ -4,7 +4,7 @@ import by.vss.practice.product_system.exception.ProductDatabaseException;
 
 import java.util.List;
 
-public interface InMemoryDBInterface<T> {
+public interface ProductServiceI<T> {
     void resetDatabase();
 
     int getDatabaseSize();
